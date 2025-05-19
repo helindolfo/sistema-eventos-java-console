@@ -1,0 +1,12 @@
+# Arquivos de backup
+*.class
+*.log
+
+# Arquivos de IDEs
+*.iml
+.idea/
+.vscode/
+
+# Arquivos do sistema
+.DS_Store
+events.data
