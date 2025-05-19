@@ -48,7 +48,7 @@ Permitir que o usuário cadastre eventos e possa participar, cancelar, visualiza
 
 1. Clone este repositório:
 ```bash
-git clone https://github.com/seuusuario/sistema-eventos-java.git
+git clone https://github.com/helindolfo/sistema-eventos-java-console.git
 ```
 2. Abra o projeto na sua IDE Java (Eclipse, IntelliJ, NetBeans ou Replit)
 3. Compile e execute `Main.java`
