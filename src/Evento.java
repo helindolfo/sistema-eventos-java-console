@@ -1,42 +1,77 @@
-// Evento.java
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Evento implements Serializable {
+public class Evento implements Serializable, Comparable<Evento> {
+    private static final long serialVersionUID = 1L;
     private String nome;
     private String endereco;
-    private String categoria;
+    private CategoriaEvento categoria;
     private LocalDateTime horario;
     private String descricao;
-    private List<Usuario> participantes = new ArrayList<>();
+    private List<Usuario> participantes;
 
-    public Evento(String nome, String endereco, String categoria, LocalDateTime horario, String descricao) {
+    public Evento(String nome, String endereco, CategoriaEvento categoria, 
+                 LocalDateTime horario, String descricao) {
         this.nome = nome;
         this.endereco = endereco;
         this.categoria = categoria;
         this.horario = horario;
         this.descricao = descricao;
+        this.participantes = new ArrayList<>();
     }
 
-    public void adicionarParticipante(Usuario u) {
-        participantes.add(u);
+    // Getters
+    public String getNome() { return nome; }
+    public String getEndereco() { return endereco; }
+    public CategoriaEvento getCategoria() { return categoria; }
+    public LocalDateTime getHorario() { return horario; }
+    public String getDescricao() { return descricao; }
+    public List<Usuario> getParticipantes() { return participantes; }
+
+    // Métodos para gerenciar participantes
+    public void inscreverUsuario(Usuario usuario) {
+        participantes.add(usuario);
+        usuario.inscreverEmEvento(this);
     }
 
-    public void removerParticipante(Usuario u) {
-        participantes.remove(u);
+    public void cancelarParticipacao(Usuario usuario) {
+        participantes.remove(usuario);
+        usuario.cancelarInscricao(this);
     }
 
-    public LocalDateTime getHorario() {
-        return horario;
+    // Métodos para verificação de status
+    public boolean estaOcorrendoAgora() {
+        LocalDateTime agora = LocalDateTime.now();
+        return !horario.isAfter(agora) && horario.plusHours(2).isAfter(agora);
     }
 
-    public String getNome() {
-        return nome;
+    public boolean jaOcorreu() {
+        return horario.isBefore(LocalDateTime.now());
     }
 
+    // Implementação para ordenação
+    @Override
+    public int compareTo(Evento outro) {
+        return this.horario.compareTo(outro.horario);
+    }
+
+    @Override
     public String toString() {
-        return nome + " | " + categoria + " | " + endereco + " | " + horario + "\n" + descricao;
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+        return "Evento{" +
+                "nome='" + nome + '\'' +
+                ", endereco='" + endereco + '\'' +
+                ", categoria=" + categoria +
+                ", horario=" + horario.format(formatter) +
+                ", descricao='" + descricao + '\'' +
+                ", participantes=" + participantes.size() +
+                '}';
     }
+}
+
+enum CategoriaEvento {
+    MUSICAL, ESPORTIVO, CULTURAL, EDUCACIONAL, SOCIAL, TECNOLOGICO
 }
